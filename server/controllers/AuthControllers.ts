@@ -202,11 +202,11 @@ export const logoutUser = async (req: Request, res: Response) => {
 };
 
 /* =========================
-   VERIFY USER (🔥 FIXED)
+   VERIFY USER ( )
 ========================= */
 export const verifyUser = async (req: Request, res: Response) => {
     try {
-        // 🔴 FIX: handle unauthenticated users safely
+        //  : handle unauthenticated users safely
         if (!req.session || !req.session.userId) {
             return res.status(401).json({ message: 'Not authenticated' });
         }
