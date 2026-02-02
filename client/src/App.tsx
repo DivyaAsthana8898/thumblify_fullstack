@@ -6,6 +6,7 @@ import './globals.css';
 import LenisScroll from './components/LenisScroll';
 import Generate from './pages/Generate';
 import MyGeneration from './pages/MyGeneration';
+import ContactSection from './sections/ContactSection';
 import YtPreview from './pages/YtPreview';
 import Login from './components/Login';
 import { useEffect } from 'react';
@@ -28,6 +29,7 @@ export default function App() {
                 <Route path='/generate' element={<Generate />} />
                 <Route path='/generate/:id' element={<Generate />} />
                 <Route path='/my-generation' element={<MyGeneration />} />
+                <Route path='/contact-section' element={<ContactSection />} />
                 <Route path='/preview' element={<YtPreview />} />
                 <Route path='/login' element={<Login />} />
             </Routes>
