@@ -46,7 +46,7 @@ export default function Navbar() {
             </Link>
           )}
 
-          <Link to='#' className='hover:text-pink-300 transition'>
+          <Link to='/contact-section' className='hover:text-pink-300 transition'>
             Contact us
           </Link>
         </div>
@@ -114,7 +114,7 @@ export default function Navbar() {
           </Link>
         )}
 
-        <Link onClick={() => setIsOpen(false)} to='#'>
+        <Link onClick={() => setIsOpen(false)} to='/contact-section'>
           Contact us
         </Link>
 
