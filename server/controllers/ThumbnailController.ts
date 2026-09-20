@@ -11,26 +11,33 @@ import cloudinary from '../configs/cloudinary.js';
 const stylePrompts = {
     'Bold & Graphic': `
 premium viral YouTube thumbnail design,
-bold visual storytelling, dramatic subject,
-vibrant colors, powerful contrast,
-dynamic composition, expressive visuals,
+bold visual storytelling,
+strong focal point,
+dramatic subject presentation,
+vibrant controlled colors,
+powerful contrast,
+dynamic but clean composition,
 high-impact commercial artwork
 `,
 
     'Tech/Futuristic': `
 premium futuristic YouTube thumbnail,
-advanced technology, holographic interfaces,
-neon lighting, cyberpunk atmosphere,
-glowing digital elements, cinematic sci-fi design,
-high-end commercial advertising quality
+advanced technology atmosphere,
+modern digital interfaces,
+controlled neon lighting,
+cinematic technology environment,
+high-end commercial advertising quality,
+clean futuristic composition
 `,
 
     Minimalist: `
 luxury minimalist YouTube thumbnail,
 clean professional composition,
 simple but powerful visual storytelling,
-elegant color palette, perfect spacing,
-strong focal point, premium editorial design
+elegant color palette,
+perfect spacing,
+strong focal point,
+premium editorial design
 `,
 
     Photorealistic: `
@@ -38,15 +45,18 @@ ultra-realistic cinematic YouTube thumbnail,
 professional DSLR photography,
 natural realistic textures,
 dramatic cinematic lighting,
-sharp details, realistic depth of field,
+sharp details,
+realistic depth of field,
 high-end commercial photography
 `,
 
     Illustrated: `
 premium digital illustration YouTube thumbnail,
-highly detailed artwork, expressive characters,
-beautiful color grading, bold outlines,
-dynamic perspective, polished professional illustration
+highly detailed artwork,
+beautiful color grading,
+bold polished visual design,
+dynamic perspective,
+professional illustration quality
 `,
 };
 
@@ -57,42 +67,53 @@ dynamic perspective, polished professional illustration
 const colorSchemeDescriptions = {
     vibrant: `
 highly vibrant colors,
-rich saturation, bold contrast,
+rich saturation,
+bold controlled contrast,
 energetic color grading,
-bright highlights and deep shadows
+bright highlights,
+deep shadows
 `,
 
     sunset: `
 cinematic sunset color palette,
 orange, red, pink and purple tones,
-warm golden light, atmospheric glow,
+warm golden light,
+atmospheric glow,
 premium movie-poster color grading
 `,
 
     forest: `
-rich emerald green, deep forest tones,
-earthy colors, natural contrast,
+rich emerald green,
+deep forest tones,
+earthy colors,
+natural contrast,
 mysterious atmospheric lighting,
 fresh organic cinematic palette
 `,
 
     neon: `
-electric blue, magenta and purple neon,
-glowing cyberpunk accents,
-high contrast, futuristic lighting,
+electric blue,
+magenta and purple neon,
+controlled cyberpunk accents,
+high contrast,
+futuristic lighting,
 premium nightlife color grading
 `,
 
     purple: `
-luxury purple, violet and magenta tones,
-deep shadows, elegant highlights,
+luxury purple,
+violet and magenta tones,
+deep shadows,
+elegant highlights,
 modern premium visual identity
 `,
 
     monochrome: `
 dramatic black and white color grading,
-strong shadows, powerful highlights,
-high contrast, cinematic timeless mood
+strong shadows,
+powerful highlights,
+high contrast,
+cinematic timeless mood
 `,
 
     ocean: `
@@ -104,7 +125,8 @@ clean professional color grading
 
     pastel: `
 soft premium pastel colors,
-gentle highlights, subtle shadows,
+gentle highlights,
+subtle shadows,
 modern friendly aesthetic,
 clean polished visual design
 `,
@@ -140,114 +162,250 @@ const enhancePromptWithGroq = async ({
         colorSchemeDescriptions[colorScheme as ColorScheme] ||
         colorSchemeDescriptions.vibrant;
 
-    const textInstruction = textOverlay
-        ? `
-Leave a clean and balanced empty area where this text can be added later:
-"${textOverlay}"
+    const originalUserIdea =
+        userPrompt?.trim() || title.trim();
 
-Do not generate any text inside the image.
+    const textInstruction = textOverlay?.trim()
+        ? `
+The user wants this text added later:
+
+"${textOverlay.trim()}"
+
+DO NOT generate this text inside the image.
+
+Instead, create clean negative space where the frontend can place
+the text without covering the main subject.
 `
         : `
-Leave clean negative space for optional typography.
 Do not generate any text inside the image.
+Leave useful negative space for optional typography.
 `;
 
     const groqPrompt = `
-You are a world-class creative director, cinematic photographer,
-professional YouTube thumbnail designer and AI image prompt engineer.
+You are an expert AI image prompt engineer and professional YouTube
+thumbnail creative director.
 
-Your task is to create ONE extremely detailed, premium-quality image
-generation prompt for a professional YouTube thumbnail.
+Your MOST IMPORTANT responsibility is ACCURACY.
 
-The final image must look like it was designed by an expert creative agency
-for a high-performing YouTube channel.
+The final image must represent the user's original idea.
+Do NOT replace, reinterpret, or change the user's main concept.
 
-VIDEO TITLE:
-${title}
+==================================================
+ORIGINAL USER IDEA
+==================================================
 
-USER IDEA:
-${userPrompt || 'Create a powerful visual concept based on the video title.'}
+${originalUserIdea}
 
-THUMBNAIL STYLE:
+==================================================
+VIDEO TITLE
+==================================================
+
+${title.trim()}
+
+==================================================
+SELECTED STYLE
+==================================================
+
 ${selectedStyle}
 
-COLOR PALETTE:
+==================================================
+SELECTED COLOR PALETTE
+==================================================
+
 ${selectedColor}
 
-ASPECT RATIO:
+==================================================
+ASPECT RATIO
+==================================================
+
 ${aspectRatio || '16:9'}
 
-TEXT REQUIREMENT:
-${textOverlay || 'No text specified'}
+==================================================
+TEXT
+==================================================
 
-MANDATORY VISUAL QUALITY:
-- Ultra-detailed 4K UHD quality.
-- Premium cinematic composition.
-- Professional commercial advertising quality.
-- Sharp focus on the main subject.
-- Realistic textures and fine details.
-- Dramatic cinematic lighting.
-- Beautiful highlights and deep shadows.
-- Strong foreground, middle-ground and background separation.
-- Professional depth of field.
-- Dynamic camera angle.
-- Powerful visual storytelling.
-- Clear and instantly understandable main subject.
-- Strong contrast and excellent color grading.
-- Eye-catching composition suitable for YouTube.
-- Make the main subject large and visually dominant.
-- Use visual hierarchy and balanced composition.
-- Make the image look premium, polished and expensive.
-- Avoid boring stock-photo composition.
-- Avoid flat lighting and empty visuals.
-- Avoid clutter and unnecessary objects.
-- Do not create logos, signatures, website names or watermarks.
-- Do not create random, distorted or unreadable text.
-- Do not add text inside the image.
 ${textInstruction}
 
-Write only the final image-generation prompt.
-Do not explain your answer.
+==================================================
+STRICT ACCURACY RULES
+==================================================
+
+1. Preserve the user's main subject exactly.
+
+2. Preserve every important object explicitly mentioned by
+   the user.
+
+3. NEVER replace one object with another object.
+
+4. NEVER change the technology, product, person, animal,
+   vehicle, place, programming language, device or concept
+   requested by the user.
+
+5. NEVER introduce unrelated subjects.
+
+6. NEVER add random people or characters.
+
+7. NEVER add random logos.
+
+8. NEVER add unrelated technology.
+
+9. NEVER add unrelated programming languages.
+
+10. NEVER add random buildings, vehicles, animals or objects.
+
+11. If the user requests a specific object, make that object
+    clearly visible and recognizable.
+
+12. If the user requests multiple objects, all important
+    objects must be visible and visually understandable.
+
+13. Style must support the user's idea.
+    Style must NEVER override the user's idea.
+
+14. Color palette must support the subject.
+    Do not allow colors to hide or distort the main subject.
+
+15. Do not make the background more visually important
+    than the requested subject.
+
+==================================================
+COMPOSITION
+==================================================
+
+Create a professional YouTube thumbnail composition.
+
+The main subject should be immediately recognizable.
+
+Use:
+
+- strong visual hierarchy
+- large primary subject
+- clear focal point
+- foreground/background separation
+- cinematic depth
+- controlled background
+- professional lighting
+- dynamic camera angle when appropriate
+- clean composition
+- strong contrast
+- balanced negative space
+- premium commercial composition
+
+The main subject should receive approximately
+40-60% of the viewer's visual attention.
+
+The background should SUPPORT the subject,
+not compete with it.
+
+==================================================
+VISUAL QUALITY
+==================================================
+
+Ultra-detailed,
+high-resolution,
+4K-quality appearance,
+premium commercial artwork,
+cinematic lighting,
+realistic materials,
+sharp details,
+professional depth of field,
+beautiful highlights,
+controlled shadows,
+professional color grading,
+high-end advertising quality,
+polished expensive visual appearance.
+
+==================================================
+STRICTLY FORBIDDEN
+==================================================
+
+random text,
+gibberish text,
+watermark,
+signature,
+website name,
+unrelated logo,
+unrelated technology,
+unrelated object,
+extra character,
+extra person,
+extra animal,
+extra vehicle,
+duplicate objects,
+clutter,
+confusing composition,
+distorted main subject,
+generic stock-photo composition.
+
+==================================================
+FINAL REQUIREMENT
+==================================================
+
+Return ONE highly detailed image-generation prompt.
+
+The prompt must preserve the original user's idea.
+
+Do not explain anything.
+
 Do not add headings.
+
+Do not mention these instructions.
+
+Return only the final image-generation prompt.
 `;
 
     const completion = await ai.chat.completions.create({
         model: 'openai/gpt-oss-120b',
+
         messages: [
             {
                 role: 'system',
                 content:
-                    'You are an expert cinematic YouTube thumbnail prompt engineer.',
+                    'You are an extremely accurate image prompt engineer. Preserve the user concept exactly. Never invent unrelated visual elements.',
             },
             {
                 role: 'user',
                 content: groqPrompt,
             },
         ],
-        temperature: 0.75,
-        max_tokens: 1100,
+
+        /*
+         * Lower temperature = less creative drift.
+         */
+        temperature: 0.25,
+
+        max_tokens: 1400,
     });
 
     const generatedPrompt =
         completion.choices[0]?.message?.content?.trim();
 
-    return (
-        generatedPrompt ||
-        `
-${selectedStyle},
-${title},
-${selectedColor},
-ultra-detailed 4K UHD,
-cinematic lighting,
+    if (!generatedPrompt) {
+        return `
+${originalUserIdea}
+
+${selectedStyle}
+
+${selectedColor}
+
+exact requested subject,
+exact requested objects,
+clear visual hierarchy,
+large recognizable main subject,
+cinematic composition,
 professional YouTube thumbnail,
-dramatic composition,
+high-resolution,
 sharp focus,
+realistic lighting,
 premium commercial quality,
+clean background,
 no text,
-no logo,
-no watermark
-`
-    );
+no watermark,
+no unrelated objects
+`;
+    }
+
+    return generatedPrompt;
 };
 
 /* =====================================================
@@ -290,40 +448,125 @@ const generateImageWithPollinations = async (
     }
 
     const finalPrompt = `
+IMPORTANT:
+Follow the user's requested concept exactly.
+
+Do not reinterpret the concept.
+
+Do not replace requested objects.
+
+Do not invent unrelated subjects.
+
+==================================================
+IMAGE GENERATION PROMPT
+==================================================
+
 ${prompt}
 
-FINAL QUALITY INSTRUCTIONS:
-ultra-detailed 4K UHD,
-high-resolution professional artwork,
-cinematic commercial lighting,
+==================================================
+ACCURACY REQUIREMENTS
+==================================================
+
+- Preserve the main subject exactly.
+- Preserve every explicitly requested object.
+- Make requested objects clearly visible.
+- Do not replace requested objects.
+- Do not add unrelated objects.
+- Do not add random people.
+- Do not add random characters.
+- Do not add unrelated technology.
+- Do not add unrelated programming languages.
+- Do not add unrelated logos.
+- Do not change the meaning of the concept.
+- Keep the background subordinate to the main subject.
+
+==================================================
+COMPOSITION
+==================================================
+
+Large recognizable main subject,
+clear visual hierarchy,
+strong focal point,
+professional YouTube thumbnail composition,
+controlled background,
+cinematic depth,
+strong subject separation,
+dynamic but clean composition,
+professional commercial artwork.
+
+==================================================
+QUALITY
+==================================================
+
+Ultra-detailed,
+high-resolution,
+4K-quality appearance,
 sharp focus,
 realistic textures,
+cinematic commercial lighting,
+professional depth of field,
 premium color grading,
-dramatic atmosphere,
-professional YouTube thumbnail composition,
-strong subject separation,
 high contrast,
-visually compelling,
-clean background,
-no watermark,
-no logo,
-no signature,
-no website text,
-no random text
+beautiful highlights,
+controlled shadows,
+polished expensive appearance.
+
+==================================================
+TEXT RESTRICTION
+==================================================
+
+Do NOT generate text.
+
+Do NOT generate letters.
+
+Do NOT generate random typography.
+
+Do NOT generate gibberish.
+
+Leave clean negative space for text overlay.
+
+==================================================
+NEGATIVE ELEMENTS
+==================================================
+
+random text,
+gibberish,
+watermark,
+signature,
+website,
+unrelated objects,
+extra people,
+extra characters,
+extra animals,
+extra vehicles,
+duplicate objects,
+random logos,
+unrelated technology,
+cluttered background,
+distorted objects,
+confusing composition.
 `;
 
     const encodedPrompt = encodeURIComponent(finalPrompt);
 
+    /*
+     * GPT Image 2 is available in the current Pollinations
+     * image-model catalog.
+     */
     const imageUrl =
         `https://image.pollinations.ai/prompt/${encodedPrompt}` +
         `?width=${width}` +
         `&height=${height}` +
         `&nologo=true` +
         `&enhance=true` +
-        `&model=flux`;
+        `&model=gpt-image-2`;
 
-    console.log('Pollinations image URL prepared.');
-    console.log(`Image dimensions: ${width}x${height}`);
+    console.log('========================================');
+    console.log('POLLINATIONS IMAGE GENERATION');
+    console.log('========================================');
+    console.log(`Model: gpt-image-2`);
+    console.log(`Aspect ratio: ${aspectRatio}`);
+    console.log(`Dimensions: ${width}x${height}`);
 
     const response = await axios.get(imageUrl, {
         responseType: 'arraybuffer',
@@ -368,23 +611,64 @@ export const generateThumbnail = async (
             text_overlay,
         } = req.body;
 
-        if (!title || typeof title !== 'string' || !title.trim()) {
+        /* ---------------------------------------------
+           VALIDATE TITLE
+        --------------------------------------------- */
+
+        if (
+            !title ||
+            typeof title !== 'string' ||
+            !title.trim()
+        ) {
             return res.status(400).json({
                 message: 'Thumbnail title is required.',
             });
         }
 
-        const selectedAspectRatio = aspect_ratio || '16:9';
+        /* ---------------------------------------------
+           DEFAULT VALUES
+        --------------------------------------------- */
+
+        const selectedAspectRatio =
+            aspect_ratio || '16:9';
+
+        const selectedStyle =
+            style || 'Bold & Graphic';
+
+        const selectedColorScheme =
+            color_scheme || 'vibrant';
+
+        const selectedUserPrompt =
+            typeof user_prompt === 'string'
+                ? user_prompt.trim()
+                : '';
+
+        const selectedTextOverlay =
+            typeof text_overlay === 'string'
+                ? text_overlay.trim()
+                : '';
+
+        /* ---------------------------------------------
+           CREATE DATABASE RECORD
+        --------------------------------------------- */
 
         thumbnail = await Thumbnail.create({
             userId,
+
             title: title.trim(),
-            prompt_used: user_prompt || '',
-            user_prompt: user_prompt || '',
-            style: style || 'Bold & Graphic',
+
+            prompt_used: selectedUserPrompt,
+
+            user_prompt: selectedUserPrompt,
+
+            style: selectedStyle,
+
             aspect_ratio: selectedAspectRatio,
-            color_scheme: color_scheme || 'vibrant',
-            text_overlay: text_overlay || '',
+
+            color_scheme: selectedColorScheme,
+
+            text_overlay: selectedTextOverlay,
+
             isGenerating: true,
         });
 
@@ -392,73 +676,180 @@ export const generateThumbnail = async (
         console.log('THUMBNAIL GENERATION STARTED');
         console.log('========================================');
 
-        console.log('Step 1: Enhancing prompt using Groq...');
-
-        const enhancedPrompt = await enhancePromptWithGroq({
-            title: title.trim(),
-            userPrompt: user_prompt,
-            style,
-            colorScheme: color_scheme,
-            aspectRatio: selectedAspectRatio,
-            textOverlay: text_overlay,
-        });
-
-        console.log('Step 2: Groq prompt generated successfully.');
-        console.log('Step 3: Generating premium image with Pollinations AI...');
-
-        const finalBuffer = await generateImageWithPollinations(
-            enhancedPrompt,
+        console.log('Title:', title.trim());
+        console.log(
+            'User prompt:',
+            selectedUserPrompt || 'Not provided'
+        );
+        console.log('Style:', selectedStyle);
+        console.log(
+            'Aspect ratio:',
             selectedAspectRatio
         );
-
-        if (!finalBuffer || finalBuffer.length === 0) {
-            throw new Error('Image generation returned an empty image.');
-        }
-
-        console.log('Step 4: Uploading image to Cloudinary...');
-
-        const base64Image = `data:image/png;base64,${finalBuffer.toString(
-            'base64'
-        )}`;
-
-        const uploadResult = await cloudinary.uploader.upload(
-            base64Image,
-            {
-                resource_type: 'image',
-                folder: 'thumblify/thumbnails',
-                transformation: [
-                    {
-                        quality: 'auto:best',
-                        fetch_format: 'auto',
-                    },
-                ],
-            }
+        console.log(
+            'Color scheme:',
+            selectedColorScheme
         );
 
-        thumbnail.image_url = uploadResult.secure_url;
-        thumbnail.prompt_used = enhancedPrompt;
+        /* ---------------------------------------------
+           STEP 1 — GROQ PROMPT ENHANCEMENT
+        --------------------------------------------- */
+
+        console.log(
+            'Step 1: Enhancing prompt using Groq...'
+        );
+
+        const enhancedPrompt =
+            await enhancePromptWithGroq({
+                title: title.trim(),
+
+                userPrompt:
+                    selectedUserPrompt || title.trim(),
+
+                style: selectedStyle,
+
+                colorScheme:
+                    selectedColorScheme,
+
+                aspectRatio:
+                    selectedAspectRatio,
+
+                textOverlay:
+                    selectedTextOverlay,
+            });
+
+        console.log(
+            'Step 2: Groq prompt generated successfully.'
+        );
+
+        console.log(
+            'Enhanced prompt length:',
+            enhancedPrompt.length
+        );
+
+        /* ---------------------------------------------
+           STEP 2 — IMAGE GENERATION
+        --------------------------------------------- */
+
+        console.log(
+            'Step 3: Generating accurate image with Pollinations AI...'
+        );
+
+        const finalBuffer =
+            await generateImageWithPollinations(
+                enhancedPrompt,
+                selectedAspectRatio
+            );
+
+        if (
+            !finalBuffer ||
+            finalBuffer.length === 0
+        ) {
+            throw new Error(
+                'Image generation returned an empty image.'
+            );
+        }
+
+        console.log(
+            'Step 4: Image generated successfully.'
+        );
+
+        console.log(
+            'Generated image size:',
+            finalBuffer.length,
+            'bytes'
+        );
+
+        /* ---------------------------------------------
+           STEP 3 — CLOUDINARY UPLOAD
+        --------------------------------------------- */
+
+        console.log(
+            'Step 5: Uploading image to Cloudinary...'
+        );
+
+        const base64Image =
+            `data:image/png;base64,${finalBuffer.toString(
+                'base64'
+            )}`;
+
+        const uploadResult =
+            await cloudinary.uploader.upload(
+                base64Image,
+                {
+                    resource_type: 'image',
+
+                    folder: 'thumblify/thumbnails',
+
+                    transformation: [
+                        {
+                            quality: 'auto:best',
+                            fetch_format: 'auto',
+                        },
+                    ],
+                }
+            );
+
+        console.log(
+            'Step 6: Cloudinary upload successful.'
+        );
+
+        /* ---------------------------------------------
+           SAVE FINAL THUMBNAIL DATA
+        --------------------------------------------- */
+
+        thumbnail.image_url =
+            uploadResult.secure_url;
+
+        thumbnail.prompt_used =
+            enhancedPrompt;
+
         thumbnail.isGenerating = false;
 
         await thumbnail.save();
 
         console.log('========================================');
-        console.log('THUMBNAIL GENERATED SUCCESSFULLY');
+        console.log(
+            'THUMBNAIL GENERATED SUCCESSFULLY'
+        );
         console.log('========================================');
 
         return res.status(200).json({
-            message: 'Thumbnail Generated Successfully',
+            message:
+                'Thumbnail Generated Successfully',
+
             thumbnail,
         });
+
     } catch (error: any) {
         console.error('========================================');
-        console.error('THUMBNAIL GENERATION ERROR');
+        console.error(
+            'THUMBNAIL GENERATION ERROR'
+        );
         console.error('========================================');
+
         console.error(error);
 
+        /* ---------------------------------------------
+           UPDATE FAILED GENERATION
+        --------------------------------------------- */
+
         if (thumbnail) {
-            thumbnail.isGenerating = false;
-            await thumbnail.save();
+            try {
+                thumbnail.isGenerating = false;
+
+                await thumbnail.save();
+            } catch (saveError) {
+                console.error(
+                    'Failed to update thumbnail status:',
+                    saveError
+                );
+            }
         }
+
+        /* ---------------------------------------------
+           ERROR MESSAGE
+        --------------------------------------------- */
 
         const errorMessage =
             error?.response?.data?.message ||
@@ -481,18 +872,29 @@ export const deleteThumbnail = async (
 ) => {
     try {
         const { id } = req.params;
+
         const { userId } = req.session;
+
+        /* ---------------------------------------------
+           AUTHENTICATION
+        --------------------------------------------- */
 
         if (!userId) {
             return res.status(401).json({
-                message: 'Unauthorized. Please login again.',
+                message:
+                    'Unauthorized. Please login again.',
             });
         }
 
-        const deletedThumbnail = await Thumbnail.findOneAndDelete({
-            _id: id,
-            userId,
-        });
+        /* ---------------------------------------------
+           DELETE ONLY USER'S OWN THUMBNAIL
+        --------------------------------------------- */
+
+        const deletedThumbnail =
+            await Thumbnail.findOneAndDelete({
+                _id: id,
+                userId,
+            });
 
         if (!deletedThumbnail) {
             return res.status(404).json({
@@ -501,14 +903,20 @@ export const deleteThumbnail = async (
         }
 
         return res.status(200).json({
-            message: 'Thumbnail deleted successfully',
+            message:
+                'Thumbnail deleted successfully',
         });
+
     } catch (error: any) {
-        console.error('Delete thumbnail error:', error);
+        console.error(
+            'Delete thumbnail error:',
+            error
+        );
 
         return res.status(500).json({
             message:
-                error?.message || 'Failed to delete thumbnail.',
+                error?.message ||
+                'Failed to delete thumbnail.',
         });
     }
 };
