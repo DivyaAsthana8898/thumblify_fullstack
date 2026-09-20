@@ -4,55 +4,119 @@ import Thumbnail from '../models/Thumbnail.js';
 import ai from '../configs/ai.js';
 import cloudinary from '../configs/cloudinary.js';
 
+/* =====================================================
+   PREMIUM THUMBNAIL STYLE PROMPTS
+===================================================== */
+
 const stylePrompts = {
-    'Bold & Graphic':
-        'eye-catching thumbnail, bold typography, vibrant colors, expressive facial reaction, dramatic lighting, high contrast, click-worthy composition, professional YouTube thumbnail style',
+    'Bold & Graphic': `
+premium viral YouTube thumbnail design,
+bold visual storytelling, dramatic subject,
+vibrant colors, powerful contrast,
+dynamic composition, expressive visuals,
+high-impact commercial artwork
+`,
 
-    'Tech/Futuristic':
-        'futuristic thumbnail, sleek modern design, digital UI elements, glowing accents, holographic effects, cyber-tech aesthetic, sharp lighting, high-tech atmosphere',
+    'Tech/Futuristic': `
+premium futuristic YouTube thumbnail,
+advanced technology, holographic interfaces,
+neon lighting, cyberpunk atmosphere,
+glowing digital elements, cinematic sci-fi design,
+high-end commercial advertising quality
+`,
 
-    Minimalist:
-        'minimalist thumbnail, clean layout, simple shapes, limited color palette, plenty of negative space, modern flat design, clear focal point',
+    Minimalist: `
+luxury minimalist YouTube thumbnail,
+clean professional composition,
+simple but powerful visual storytelling,
+elegant color palette, perfect spacing,
+strong focal point, premium editorial design
+`,
 
-    Photorealistic:
-        'photorealistic thumbnail, ultra-realistic lighting, natural skin tones, candid moment, DSLR-style photography, lifestyle realism, shallow depth of field',
+    Photorealistic: `
+ultra-realistic cinematic YouTube thumbnail,
+professional DSLR photography,
+natural realistic textures,
+dramatic cinematic lighting,
+sharp details, realistic depth of field,
+high-end commercial photography
+`,
 
-    Illustrated:
-        'illustrated thumbnail, custom digital illustration, stylized characters, bold outlines, vibrant colors, creative cartoon or vector art style',
+    Illustrated: `
+premium digital illustration YouTube thumbnail,
+highly detailed artwork, expressive characters,
+beautiful color grading, bold outlines,
+dynamic perspective, polished professional illustration
+`,
 };
 
+/* =====================================================
+   PREMIUM COLOR SCHEMES
+===================================================== */
+
 const colorSchemeDescriptions = {
-    vibrant:
-        'vibrant and energetic colors, high saturation, bold contrasts, eye-catching palette',
+    vibrant: `
+highly vibrant colors,
+rich saturation, bold contrast,
+energetic color grading,
+bright highlights and deep shadows
+`,
 
-    sunset:
-        'warm sunset tones, orange, pink and purple hues, soft gradients, cinematic glow',
+    sunset: `
+cinematic sunset color palette,
+orange, red, pink and purple tones,
+warm golden light, atmospheric glow,
+premium movie-poster color grading
+`,
 
-    forest:
-        'natural green tones, earthy colors, calm and organic palette, fresh atmosphere',
+    forest: `
+rich emerald green, deep forest tones,
+earthy colors, natural contrast,
+mysterious atmospheric lighting,
+fresh organic cinematic palette
+`,
 
-    neon:
-        'neon glow effects, electric blues and pinks, cyberpunk lighting, high contrast glow',
+    neon: `
+electric blue, magenta and purple neon,
+glowing cyberpunk accents,
+high contrast, futuristic lighting,
+premium nightlife color grading
+`,
 
-    purple:
-        'purple-dominant color palette, magenta and violet tones, modern and stylish mood',
+    purple: `
+luxury purple, violet and magenta tones,
+deep shadows, elegant highlights,
+modern premium visual identity
+`,
 
-    monochrome:
-        'black and white color scheme, high contrast, dramatic lighting, timeless aesthetic',
+    monochrome: `
+dramatic black and white color grading,
+strong shadows, powerful highlights,
+high contrast, cinematic timeless mood
+`,
 
-    ocean:
-        'cool blue and teal tones, aquatic color palette, fresh and clean atmosphere',
+    ocean: `
+deep blue and teal tones,
+fresh aquatic atmosphere,
+cinematic cool lighting,
+clean professional color grading
+`,
 
-    pastel:
-        'soft pastel colors, low saturation, gentle tones, calm and friendly aesthetic',
+    pastel: `
+soft premium pastel colors,
+gentle highlights, subtle shadows,
+modern friendly aesthetic,
+clean polished visual design
+`,
 };
 
 type ThumbnailStyle = keyof typeof stylePrompts;
 type ColorScheme = keyof typeof colorSchemeDescriptions;
 
-/**
- * Generate an enhanced image prompt using Groq
- */
+/* =====================================================
+   ENHANCE USER PROMPT USING GROQ
+===================================================== */
+
 const enhancePromptWithGroq = async ({
     title,
     userPrompt,
@@ -68,115 +132,218 @@ const enhancePromptWithGroq = async ({
     aspectRatio?: string;
     textOverlay?: string;
 }) => {
-    const styleDescription =
+    const selectedStyle =
         stylePrompts[style as ThumbnailStyle] ||
         stylePrompts['Bold & Graphic'];
 
-    const colorDescription = colorScheme
-        ? colorSchemeDescriptions[colorScheme as ColorScheme] || colorScheme
-        : 'professional high-contrast colors';
+    const selectedColor =
+        colorSchemeDescriptions[colorScheme as ColorScheme] ||
+        colorSchemeDescriptions.vibrant;
+
+    const textInstruction = textOverlay
+        ? `
+Leave a clean and balanced empty area where this text can be added later:
+"${textOverlay}"
+
+Do not generate any text inside the image.
+`
+        : `
+Leave clean negative space for optional typography.
+Do not generate any text inside the image.
+`;
 
     const groqPrompt = `
-You are an expert YouTube thumbnail prompt engineer.
+You are a world-class creative director, cinematic photographer,
+professional YouTube thumbnail designer and AI image prompt engineer.
 
-Create one detailed image-generation prompt for a highly clickable YouTube thumbnail.
+Your task is to create ONE extremely detailed, premium-quality image
+generation prompt for a professional YouTube thumbnail.
 
-Video title:
+The final image must look like it was designed by an expert creative agency
+for a high-performing YouTube channel.
+
+VIDEO TITLE:
 ${title}
 
-User instructions:
-${userPrompt || 'No additional instructions'}
+USER IDEA:
+${userPrompt || 'Create a powerful visual concept based on the video title.'}
 
-Visual style:
-${styleDescription}
+THUMBNAIL STYLE:
+${selectedStyle}
 
-Color scheme:
-${colorDescription}
+COLOR PALETTE:
+${selectedColor}
 
-Aspect ratio:
+ASPECT RATIO:
 ${aspectRatio || '16:9'}
 
-Text overlay:
-${textOverlay || 'No text overlay specified'}
+TEXT REQUIREMENT:
+${textOverlay || 'No text specified'}
 
-Requirements:
-- Make the image visually attractive and professional.
-- Use strong composition and a clear focal point.
-- Include cinematic lighting and high visual contrast.
-- Do not explain anything.
-- Return only the final image-generation prompt.
+MANDATORY VISUAL QUALITY:
+- Ultra-detailed 4K UHD quality.
+- Premium cinematic composition.
+- Professional commercial advertising quality.
+- Sharp focus on the main subject.
+- Realistic textures and fine details.
+- Dramatic cinematic lighting.
+- Beautiful highlights and deep shadows.
+- Strong foreground, middle-ground and background separation.
+- Professional depth of field.
+- Dynamic camera angle.
+- Powerful visual storytelling.
+- Clear and instantly understandable main subject.
+- Strong contrast and excellent color grading.
+- Eye-catching composition suitable for YouTube.
+- Make the main subject large and visually dominant.
+- Use visual hierarchy and balanced composition.
+- Make the image look premium, polished and expensive.
+- Avoid boring stock-photo composition.
+- Avoid flat lighting and empty visuals.
+- Avoid clutter and unnecessary objects.
+- Do not create logos, signatures, website names or watermarks.
+- Do not create random, distorted or unreadable text.
+- Do not add text inside the image.
+${textInstruction}
+
+Write only the final image-generation prompt.
+Do not explain your answer.
+Do not add headings.
 `;
 
     const completion = await ai.chat.completions.create({
-      model: 'openai/gpt-oss-120b',
-
+        model: 'openai/gpt-oss-120b',
         messages: [
             {
                 role: 'system',
                 content:
-                    'You create detailed and effective prompts for AI image generation.',
+                    'You are an expert cinematic YouTube thumbnail prompt engineer.',
             },
-
             {
                 role: 'user',
                 content: groqPrompt,
             },
-            
         ],
-        temperature: 0.8,
-        max_tokens: 700,
+        temperature: 0.75,
+        max_tokens: 1100,
     });
 
+    const generatedPrompt =
+        completion.choices[0]?.message?.content?.trim();
+
     return (
-        completion.choices[0]?.message?.content?.trim() ||
-        `${styleDescription}, ${title}, ${colorDescription}, professional YouTube thumbnail`
+        generatedPrompt ||
+        `
+${selectedStyle},
+${title},
+${selectedColor},
+ultra-detailed 4K UHD,
+cinematic lighting,
+professional YouTube thumbnail,
+dramatic composition,
+sharp focus,
+premium commercial quality,
+no text,
+no logo,
+no watermark
+`
     );
 };
 
-/**
- * Generate image using Pollinations AI
- */
+/* =====================================================
+   GENERATE IMAGE USING POLLINATIONS AI
+===================================================== */
+
 const generateImageWithPollinations = async (
     prompt: string,
     aspectRatio: string = '16:9'
 ): Promise<Buffer> => {
-    let width = 1280;
-    let height = 720;
+    let width = 1920;
+    let height = 1080;
 
-    if (aspectRatio === '1:1') {
-        width = 1024;
-        height = 1024;
-    } else if (aspectRatio === '4:5') {
-        width = 1024;
-        height = 1280;
-    } else if (aspectRatio === '9:16') {
-        width = 720;
-        height = 1280;
-    } else if (aspectRatio === '4:3') {
-        width = 1024;
-        height = 768;
+    switch (aspectRatio) {
+        case '1:1':
+            width = 1536;
+            height = 1536;
+            break;
+
+        case '9:16':
+            width = 1080;
+            height = 1920;
+            break;
+
+        case '4:5':
+            width = 1280;
+            height = 1600;
+            break;
+
+        case '4:3':
+            width = 1600;
+            height = 1200;
+            break;
+
+        case '16:9':
+        default:
+            width = 1920;
+            height = 1080;
+            break;
     }
 
-    const encodedPrompt = encodeURIComponent(prompt);
+    const finalPrompt = `
+${prompt}
+
+FINAL QUALITY INSTRUCTIONS:
+ultra-detailed 4K UHD,
+high-resolution professional artwork,
+cinematic commercial lighting,
+sharp focus,
+realistic textures,
+premium color grading,
+dramatic atmosphere,
+professional YouTube thumbnail composition,
+strong subject separation,
+high contrast,
+visually compelling,
+clean background,
+no watermark,
+no logo,
+no signature,
+no website text,
+no random text
+`;
+
+    const encodedPrompt = encodeURIComponent(finalPrompt);
 
     const imageUrl =
         `https://image.pollinations.ai/prompt/${encodedPrompt}` +
         `?width=${width}` +
         `&height=${height}` +
         `&nologo=true` +
-        `&enhance=true`;
+        `&enhance=true` +
+        `&model=flux`;
+
+    console.log('Pollinations image URL prepared.');
+    console.log(`Image dimensions: ${width}x${height}`);
 
     const response = await axios.get(imageUrl, {
         responseType: 'arraybuffer',
-        timeout: 120000,
+        timeout: 180000,
+        headers: {
+            Accept: 'image/*',
+        },
     });
+
+    if (!response.data || response.data.length === 0) {
+        throw new Error('Pollinations returned an empty image.');
+    }
 
     return Buffer.from(response.data);
 };
 
-/**
- * Generate Thumbnail
- */
+/* =====================================================
+   GENERATE THUMBNAIL CONTROLLER
+===================================================== */
+
 export const generateThumbnail = async (
     req: Request,
     res: Response
@@ -201,88 +368,113 @@ export const generateThumbnail = async (
             text_overlay,
         } = req.body;
 
-        if (!title || !title.trim()) {
+        if (!title || typeof title !== 'string' || !title.trim()) {
             return res.status(400).json({
                 message: 'Thumbnail title is required.',
             });
         }
 
+        const selectedAspectRatio = aspect_ratio || '16:9';
+
         thumbnail = await Thumbnail.create({
             userId,
-            title,
+            title: title.trim(),
             prompt_used: user_prompt || '',
             user_prompt: user_prompt || '',
-            style,
-            aspect_ratio: aspect_ratio || '16:9',
-            color_scheme,
-            text_overlay,
+            style: style || 'Bold & Graphic',
+            aspect_ratio: selectedAspectRatio,
+            color_scheme: color_scheme || 'vibrant',
+            text_overlay: text_overlay || '',
             isGenerating: true,
         });
 
-        console.log('Enhancing prompt using Groq...');
+        console.log('========================================');
+        console.log('THUMBNAIL GENERATION STARTED');
+        console.log('========================================');
+
+        console.log('Step 1: Enhancing prompt using Groq...');
 
         const enhancedPrompt = await enhancePromptWithGroq({
-            title,
+            title: title.trim(),
             userPrompt: user_prompt,
             style,
             colorScheme: color_scheme,
-            aspectRatio: aspect_ratio,
+            aspectRatio: selectedAspectRatio,
             textOverlay: text_overlay,
         });
 
-        console.log('Enhanced prompt:', enhancedPrompt);
-        console.log('Generating image using Pollinations AI...');
+        console.log('Step 2: Groq prompt generated successfully.');
+        console.log('Step 3: Generating premium image with Pollinations AI...');
 
         const finalBuffer = await generateImageWithPollinations(
             enhancedPrompt,
-            aspect_ratio || '16:9'
+            selectedAspectRatio
         );
 
         if (!finalBuffer || finalBuffer.length === 0) {
             throw new Error('Image generation returned an empty image.');
         }
 
+        console.log('Step 4: Uploading image to Cloudinary...');
+
         const base64Image = `data:image/png;base64,${finalBuffer.toString(
             'base64'
         )}`;
 
-        console.log('Uploading image to Cloudinary...');
-
-        const uploadResult = await cloudinary.uploader.upload(base64Image, {
-            resource_type: 'image',
-            folder: 'thumblify/thumbnails',
-        });
+        const uploadResult = await cloudinary.uploader.upload(
+            base64Image,
+            {
+                resource_type: 'image',
+                folder: 'thumblify/thumbnails',
+                transformation: [
+                    {
+                        quality: 'auto:best',
+                        fetch_format: 'auto',
+                    },
+                ],
+            }
+        );
 
         thumbnail.image_url = uploadResult.secure_url;
-        thumbnail.isGenerating = false;
         thumbnail.prompt_used = enhancedPrompt;
+        thumbnail.isGenerating = false;
 
         await thumbnail.save();
+
+        console.log('========================================');
+        console.log('THUMBNAIL GENERATED SUCCESSFULLY');
+        console.log('========================================');
 
         return res.status(200).json({
             message: 'Thumbnail Generated Successfully',
             thumbnail,
         });
     } catch (error: any) {
-        console.error('Thumbnail generation error:', error);
+        console.error('========================================');
+        console.error('THUMBNAIL GENERATION ERROR');
+        console.error('========================================');
+        console.error(error);
 
         if (thumbnail) {
             thumbnail.isGenerating = false;
             await thumbnail.save();
         }
 
+        const errorMessage =
+            error?.response?.data?.message ||
+            error?.message ||
+            'Failed to generate thumbnail.';
+
         return res.status(500).json({
-            message:
-                error?.response?.data?.message ||
-                error?.message ||
-                'Failed to generate thumbnail.',
+            message: errorMessage,
         });
     }
 };
 
-/**
- * Delete Thumbnail
- */
+/* =====================================================
+   DELETE THUMBNAIL CONTROLLER
+===================================================== */
+
 export const deleteThumbnail = async (
     req: Request,
     res: Response
@@ -315,7 +507,8 @@ export const deleteThumbnail = async (
         console.error('Delete thumbnail error:', error);
 
         return res.status(500).json({
-            message: error?.message || 'Failed to delete thumbnail.',
+            message:
+                error?.message || 'Failed to delete thumbnail.',
         });
     }
 };
