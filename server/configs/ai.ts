@@ -1,7 +1,7 @@
-import { GoogleGenAI } from '@google/genai';
+import Groq from 'groq-sdk';
 
-const ai = new GoogleGenAI({
-    apiKey: process.env.GEMINI_API_KEY as string
-})
+const ai = new Groq({
+    apiKey: process.env.GROQ_API_KEY as string
+});
 
 export default ai;

@@ -1,4 +1,7 @@
+
+
 import express, { Request, Response } from 'express';
+
 import cors from 'cors'
 import 'dotenv/config'
 import connectDB from './configs/db.js';
@@ -18,12 +21,16 @@ declare module 'express-session' {
 await connectDB()
 
 const app = express();
-
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:3000',"https://thumblify-gamma.vercel.app"],
+    origin: [
+        'http://localhost:5173',
+        'http://localhost:5174',
+        'http://localhost:5175',
+        'http://localhost:5000',
+        "https://thumblify-gamma.vercel.app"
+    ],
     credentials: true
 }))
-
 app.set('trust proxy', 1)
 
 app.use(session({
