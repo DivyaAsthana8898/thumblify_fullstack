@@ -23,14 +23,13 @@ await connectDB()
 const app = express();
 app.use(cors({
     origin: [
-        'http://localhost:5173',
-        'http://localhost:5174',
-        'http://localhost:5175',
-        'http://localhost:5000',
-        "https://thumblify-gamma.vercel.app"
+        "https://thumblify-fullstack-5iin.vercel.app",
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "http://localhost:5175"
     ],
     credentials: true
-}))
+}));
 app.set('trust proxy', 1)
 
 app.use(session({
