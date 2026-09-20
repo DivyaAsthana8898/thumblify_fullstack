@@ -23,6 +23,7 @@ await connectDB()
 const app = express();
 app.use(cors({
     origin: [
+        "https://thumblify-fullstack-w4fn.vercel.app/login",
         "https://thumblify-fullstack-5iin.vercel.app",
         "http://localhost:5173",
         "http://localhost:5174",
